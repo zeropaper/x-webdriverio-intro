@@ -87,7 +87,9 @@ The slightly green is where a click shows how the `:hover` style should look lik
 
 <details>
   <summary>Screenshot</summary>
-  [!screenshot](https://github.com/zeropaper/xt-sc-chess-queen/blob/master/sc/highlight-iphone-6-landscape.png?raw=true)
+  
+[!screenshot](https://github.com/zeropaper/xt-sc-chess-queen/blob/master/sc/highlight-iphone-6-landscape.png?raw=true)
+
 </details>
 
 
