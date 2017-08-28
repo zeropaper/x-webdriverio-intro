@@ -1,6 +1,8 @@
 # x-webdriverio-intro
 
-Exercise to introduce E2E (end-to-end) testing with [WebdriverIO](http://webdriver.io/).
+Exercise to introduce
+- [BEM CSS](https://css-tricks.com/bem-101/) technique.
+- E2E (end-to-end) testing with [WebdriverIO](http://webdriver.io/).
 
 As usual, make a commit (and push it) after each step.
 
@@ -17,9 +19,11 @@ Based on the previous exercises.
   - Add the build scripts (for the the JS and SCSS, like in the loader simulation exercise)
   - In your `prebuild` script, use `mkdirp` to create a folder `docs/image-diffs`
 
+__Note:__ You can add additional scripts using `nodemon` (have a look at its help) to avoid to run the commands manually each time something changes and therefore ease development.
 
-### Replace the table with div
+### Replace the "table" with "div"
 
+If the usage of a `table` element was OK for the first part of the exercise but it might not be suitable for the following steps (because of the way table elements are rendered by the browser).
 This step is meant to exercise the [BEM CSS](https://css-tricks.com/bem-101/) technique.
 
 - Add the following code just after the opening `body`
@@ -77,7 +81,7 @@ This step is meant to exercise the [BEM CSS](https://css-tricks.com/bem-101/) te
         .chessboard__cell--black:hover { /* ... */ }
       .chessboard__cell--highlight:after { /* ... */ }
   ````
-  __Note:__ have a closer look at what the [`&` sign does in SASS](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#Referencing_Parent_Selectors_____parent-selector)
+  __Note:__ have a close look at what the [`&` sign does in SASS](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#Referencing_Parent_Selectors_____parent-selector) and how the above selectors are indented.
 
 
 ### Work on styles
@@ -93,32 +97,45 @@ The slightly green is where a click shows how the `:hover` style should look lik
 </details>
 
 
+### Using your array matrix library
+
+When you write code, you want to stay DRY (__D__on't __R__epeat __Y__ourself), so now that you have a nice, tested and bug free library (from the [Mocha intro](//github.com/zeropaper/x-mocha-intro) exercise) it would be good to re-use it.
+
+- Add a dependency to your `array-matrix` in the `package.json` (in `dependencies` not `devDependencies`!)
+  You can do so like: `npm i --save <your-gh-username>/<name-of-your-gh-repository>`
+- In your `src/index.js` add
+  ````js
+  var arrayMatrixLib = require('array-matrix');
+  var createMatrix = arrayMatrixLib.createMatrix;`
+  ````
+
+
 ### Add WebdriverIO
 
 - In your terminal enter the following command: `npm i -D wdio zeropaper/xt-sc-chess-queen` to install WebdriverIO as a development dependency
 - `./node_modules/.bin/wdio` to start the WebdriverIO setup wizard and answer to the questions
   - Where do you want to execute your tests?
-    On my local machine
+    "On my local machine"
   - Which framework do you want to use?
-    mocha
+    "mocha"
   - Shall I install the framework adapter for you?
-    Yes
+    "Yes"
   - Where are your test specs located?
     ./test/*.spec.js
   - Which reporter do you want to use?
-    spec
+    "spec"
   - Shall I install the reporter library for you?
-    Yes
+    "Yes"
   - Do you want to add a service to your test setup?
-    selenium-standalone and static-server
+    "selenium-standalone" and "static-server"
   - Shall I install the services for you?
-    Yes
+    "Yes"
   - Level of logging verbosity
-    silent
+    "silent"
   - In which directory should screenshots gets saved if a command fails?
-    ./errorShots/
+    "./errorShots/"
   - What is the base url?
-    http://localhost:9090
+    "http://localhost:9090"
 - Move the `wdio.conf.js` file that the wizard created at the root of the project into the `test` folder and change it to __make sure__ to have the following code in it:
   
   ````js
@@ -220,7 +237,7 @@ The slightly green is where a click shows how the `:hover` style should look lik
 
 ### Create your _spec_
 
-Create a file `test/queen-test.spec.js` with the following code.
+Create a file `test/chessboard-test.spec.js` with the following code.
 
 ````js
 const assert = require('assert');
@@ -237,7 +254,7 @@ function matrixFillArray(matrix, array) {
   return matrix;
 }
 
-describe('Loader Simulation', function() {
+describe('Chessboard', function() {
   var elements;
   var matrix = createMatrix(8, 8);
 
@@ -256,11 +273,8 @@ describe('Loader Simulation', function() {
     // and write some code to make a click on a cell of the chessboard
     //
 
-    var highlightedElements = browser.elements('.highlight').value;
-    assert(highlightedElements.length > 0);
-
-    var trElements = highlightedElements.filter(el => browser.elementIdName(el.ELEMENT).value === 'tr');
-    assert(trElements.length, 2);
+    var highlightedElements = browser.elements('.chessboard__cell--highlight').value;
+    assert(highlightedElements.length, 28);
   });
 
 
@@ -273,7 +287,7 @@ describe('Loader Simulation', function() {
   });
 
 
-  describe('tilted design', function() {
+  describe.skip('tilted design', function() {
     it('can be toggled', function() {
       // 
       // Look at the documentation of WebdriverIO (in the API section of the site)
@@ -292,16 +306,3 @@ describe('Loader Simulation', function() {
   });
 });
 ````
-
-
-### Using your array matrix library
-
-When you write code, you want to stay DRY (__D__on't __R__epeat __Y__ourself), so now that you have a nice, tested and bug free library (from the [Mocha intro](//github.com/zeropaper/x-mocha-intro) exercise) it would be good to re-use it.
-
-- Add a dependency to your `array-matrix` in the `package.json` (in `dependencies` not `devDependencies`!)
-  You can do so like: `npm i --save <your-gh-username>/<name-of-your-gh-repository>`
-- In your `src/index.js` add
-  ````js
-  var arrayMatrixLib = require('array-matrix');
-  var createMatrix = arrayMatrixLib.createMatrix;`
-  ````
