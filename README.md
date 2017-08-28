@@ -2,6 +2,8 @@
 
 Exercise to introduce E2E (end-to-end) testing with [WebdriverIO](http://webdriver.io/).
 
+As usual, make a commit (and push it) after each step.
+
 ## Steps
 
 ### Build
@@ -13,13 +15,78 @@ Based on the previous exercises.
 - Create a `package.json` and
   - Install the developent dependencies (node-sass, mkdirp, cp, browserify, uglify-js, jshint)
   - Add the build scripts (for the the JS and SCSS, like in the loader simulation exercise)
-  - Add a dependency to your `array-matrix` (under `dependencies` not `devDependencies`!)
-    You can do so like: `npm i --save <your-gh-username>/<name-of-your-gh-repository>`
+  - In your `prebuild` script, use `mkdirp` to create a folder `docs/image-diffs`
+
+### Replace the table with div
+
+This step is meant to exercise the [BEM CSS](https://css-tricks.com/bem-101/) technique.
+
+- Replace the `table` element of your `src/index.html` with
+  ````xml
+  <div class="chessboard">
+    <div class="chessboard__figures"></div>
+    <div class="chessboard__table"></div>
+  </div>
+  ````
+- Change the `renderChessboard` function to generate something that looks like the following code
+  ````xml
+  <div class="chessboard__table">
+    <div class="chessboard__row">
+      <div class="chessboard__cell"></div>
+      <div class="chessboard__cell chessboard__cell--black"></div>
+      <div class="chessboard__cell"></div>
+      <div class="chessboard__cell chessboard__cell--black"></div>
+      <div class="chessboard__cell"></div>
+      <div class="chessboard__cell chessboard__cell--black"></div>
+      <!-- ... -->
+    </div>
+    <div class="chessboard__row">
+      <div class="chessboard__cell chessboard__cell--black"></div>
+      <div class="chessboard__cell"></div>
+      <div class="chessboard__cell chessboard__cell--black"></div>
+      <div class="chessboard__cell"></div>
+      <div class="chessboard__cell chessboard__cell--black"></div>
+      <div class="chessboard__cell"></div>
+      <!-- ... -->
+    </div>
+    <!-- ... -->
+  </div>
+  ````
+- Make the necessary changes to your `src/styles.scss`. In the end, you should have a CSS outline similar to:
+  ````css
+  *,
+  *:before,
+  *:after { /* ... */ }
+
+  body { /* ... */ }
+
+  .chessboard { /* ... */ }
+    .chessboard--tilted { /* ... */ }
+    .chessboard__table { /* ... */ }
+    .chessboard__row { /* ... */ }
+    .chessboard__cell { /* ... */ }
+      .chessboard__cell:hover { /* ... */ }
+      .chessboard__cell--black { /* ... */ }
+        .chessboard__cell--black:hover { /* ... */ }
+      .chessboard__cell--highlight:after { /* ... */ }
+  ````
+  __Note:__ have a closer look at what the [`&` sign does in SASS](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#Referencing_Parent_Selectors_____parent-selector)
 
 
-### Using your array matrix library
+### Work on styles
 
-- In your terminal enter the following command: `npm i -D wdio` to install WebdriverIO as a development dependency
+Go to https://github.com/zeropaper/xt-sc-chess-queen/tree/master/sc, have a look at the different pictures (the ones wich have a name starting with `highlight-`) and change your `src/style.scss` to get as close as possible of the design.  
+The slightly green is where a click shows how the `:hover` style should look like.
+
+<details>
+  <summary>Screenshot</summary>
+  [!screenshot](https://github.com/zeropaper/xt-sc-chess-queen/blob/master/sc/highlight-iphone-6-landscape.png?raw=true)
+</details>
+
+
+### Add WebdriverIO
+
+- In your terminal enter the following command: `npm i -D wdio zeropaper/xt-sc-chess-queen` to install WebdriverIO as a development dependency
 - `./node_modules/.bin/wdio` to start the WebdriverIO setup wizard and answer to the questions
   - Where do you want to execute your tests?
     On my local machine
@@ -28,7 +95,7 @@ Based on the previous exercises.
   - Shall I install the framework adapter for you?
     Yes
   - Where are your test specs located?
-    ./test/specs/**/*.js
+    ./test/*.spec.js
   - Which reporter do you want to use?
     spec
   - Shall I install the reporter library for you?
@@ -43,7 +110,7 @@ Based on the previous exercises.
     ./errorShots/
   - What is the base url?
     http://localhost:9090
-- Move the `wdio.conf.js` file that the wizard created at the root of the project into the test folder and change it to __make sure__ to have the following code in it:
+- Move the `wdio.conf.js` file that the wizard created at the root of the project into the `test` folder and change it to __make sure__ to have the following code in it:
   
   ````js
   // ...
@@ -139,8 +206,93 @@ Based on the previous exercises.
     staticServerPort: 9090,
     // ...
     ````
+- Change your `package.json` `test` script to `npm run build && wdio test/wdio.conf.js`
 
 
-### Add WebdriverIO
+### Create your _spec_
 
-Use the wizard provided
+Create a file `test/queen-test.spec.js` with the following code.
+
+````js
+const assert = require('assert');
+const checkStyle = require('xt-sc-chess-queen');
+
+function matrixFillArray(matrix, array) {
+  var e = 0;
+  matrix.forEach(function(row, rowNum){
+    row.forEach(function(col, colNum){
+      matrix[rowNum][colNum] = array[e];
+      e++;
+    });
+  });
+  return matrix;
+}
+
+describe('Loader Simulation', function() {
+  var elements;
+  var matrix = createMatrix(8, 8);
+
+  before(function() {
+    browser.url('http://localhost:9090');
+  });
+
+  it('has 64 td elements', function() {
+    elements = browser.elements('td').value;
+    assert(elements.length, 64);
+  });
+
+  it('highlights the possible moves when a td is clicked', function() {
+    //
+    // Look at the documentation of WebdriverIO (in the API section of the site)
+    // and write some code to make a click on a cell of the chessboard
+    //
+
+    var highlightedElements = browser.elements('.highlight').value;
+    assert(highlightedElements.length > 0);
+
+    var trElements = highlightedElements.filter(el => browser.elementIdName(el.ELEMENT).value === 'tr');
+    assert(trElements.length, 2);
+  });
+
+
+  describe('normal design', function() {
+    Object.keys(checkStyle.resolutions).forEach(key => {
+      it('has the right styles for ' + key.split('-').join(' '), function () {
+        checkStyle(browser, key, 'highlight', './docs/image-diffs', 5);
+      });
+    });
+  });
+
+
+  describe('tilted design', function() {
+    it('can be toggled', function() {
+      // 
+      // Look at the documentation of WebdriverIO (in the API section of the site)
+      // and write some code to:
+      // - Make a click on the checkbox
+      // - Pause the browser slightly longer than the transition duration
+      // - Also verify that the chessboard get the chessboard--tilted class
+      // 
+    });
+
+    Object.keys(checkStyle.resolutions).forEach(key => {
+      it('has the right styles for ' + key.split('-').join(' '), function () {
+        checkStyle(browser, key, 'tilted', './docs/image-diffs', 5, 600);
+      });
+    });
+  });
+});
+````
+
+
+### Using your array matrix library
+
+When you write code, you want to stay DRY (__D__on't __R__epeat __Y__ourself), so now that you have a nice, tested and bug free library (from the [Mocha intro](//github.com/zeropaper/x-mocha-intro) exercise) it would be good to re-use it.
+
+- Add a dependency to your `array-matrix` in the `package.json` (in `dependencies` not `devDependencies`!)
+  You can do so like: `npm i --save <your-gh-username>/<name-of-your-gh-repository>`
+- In your `src/index.js` add
+  ````js
+  var arrayMatrixLib = require('array-matrix');
+  var createMatrix = arrayMatrixLib.createMatrix;`
+  ````
