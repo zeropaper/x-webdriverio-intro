@@ -112,6 +112,7 @@ When you write code, you want to stay DRY (__D__on't __R__epeat __Y__ourself), s
 
 ### Add WebdriverIO
 
+- You will need to install something a bit special (called cairo)... to do so, refer to https://www.npmjs.com/package/canvas#installation for your operating system (__NOT__ `npm install canvas` ;) , the table which is below)
 - In your terminal enter the following command: `npm i -D wdio zeropaper/xt-sc-chess-queen` to install WebdriverIO as a development dependency
 - `./node_modules/.bin/wdio` to start the WebdriverIO setup wizard and answer to the questions
   - Where do you want to execute your tests?
