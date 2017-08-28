@@ -17,10 +17,17 @@ Based on the previous exercises.
   - Add the build scripts (for the the JS and SCSS, like in the loader simulation exercise)
   - In your `prebuild` script, use `mkdirp` to create a folder `docs/image-diffs`
 
+
 ### Replace the table with div
 
 This step is meant to exercise the [BEM CSS](https://css-tricks.com/bem-101/) technique.
 
+- Add the following code just after the opening `body`
+  ````xml
+  <header>
+    <label><input type="checkbox" name="tilt"> Tilt chessboard</label>
+  </header>
+  ````
 - Replace the `table` element of your `src/index.html` with
   ````xml
   <div class="chessboard">
