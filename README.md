@@ -244,6 +244,7 @@ Create a file `test/chessboard-test.spec.js` with the following code.
 ````js
 const assert = require('assert');
 const checkStyle = require('xt-sc-chess-queen');
+const createMatrix = require('array-matrix').createMatrix;
 
 function matrixFillArray(matrix, array) {
   var e = 0;
