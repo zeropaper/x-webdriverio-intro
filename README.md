@@ -272,7 +272,7 @@ describe('Chessboard', function() {
   it('highlights the possible moves when a td is clicked', function() {
     //
     // Look at the documentation of WebdriverIO (in the API section of the site)
-    // and write some code to make a click on a cell of the chessboard
+    // and write some code to make a click on the cell at the 4th row, 5th column of the chessboard
     //
 
     var highlightedElements = browser.elements('.chessboard__cell--highlight').value;
