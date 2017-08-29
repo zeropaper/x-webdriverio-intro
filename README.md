@@ -264,15 +264,17 @@ describe('Chessboard', function() {
     browser.url('http://localhost:9090');
   });
 
-  it('has 64 td elements', function() {
-    elements = browser.elements('td').value;
+  it('has 64 .chessboard__cell elements', function() {
+    elements = browser.elements('.chessboard__cell').value;
     assert(elements.length, 64);
   });
 
-  it('highlights the possible moves when a td is clicked', function() {
+  it('highlights the possible moves when a .chessboard__cell is clicked', function() {
     //
     // Look at the documentation of WebdriverIO (in the API section of the site)
     // and write some code to make a click on the cell at the 4th row, 5th column of the chessboard
+    //
+    // look at `browser.elements()` and `browser.elementÌdClick()`
     //
 
     var highlightedElements = browser.elements('.chessboard__cell--highlight').value;
